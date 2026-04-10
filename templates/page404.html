@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Страница не найдена</title>
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/static/images/logo.png">Сверточные нейросети
+        </div>
+        <div class="registration">
+            {% if logged_in %}
+                <a href="logout">Выход</a>
+            {% else %}
+                <a href="registration">Регистрация</a>
+                <a href="login">Вход</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        <h1>Страница не найдена!</h1>
+        <div class="description">
+            <p>Чтобы начать работу, войдите в аккаунт!</p>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026, Ермоленко И.С., ВГСПУ, МИФ<br>
+        Просим оценить эффективность веб-приложения 
+        в следующей <a href="https://forms.yandex.ru/u/69a55c0002848f80e010da56" class="styled-link">Яндекс-форме</a>.<br>
+        Ваше мнение важно для улучшения качества веб-приложения!
+    </footer>
+</body>
+
+</html>

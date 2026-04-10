@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Задание 2</title>
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/css/zadanie2.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/static/images/logo.png">Сверточные нейросети
+        </div>
+        <div class="registration">
+            <a href="logout">Выход</a>
+            <a href="/">К заданиям</a>
+        </div>
+    </header>
+
+    <main>
+        <div id="list">
+            <h1>Задание 2. Построение архитектуры СНС</h1>
+            <div class="description">
+                <p style="text-indent: 50px;"><b>Цель задания:</b> построить правильную архитектуру модели сверточной 
+                нейронной сети, использующей датасет mnist.</p>
+                <p style="text-indent: 50px;">В данном задании нам нужно вспомнить, как выглядит архитектура 
+                СНС для распознавания рукописных цифр.</p>
+                <p style="text-indent: 50px;">Сначала нейросеть должна получить входные данные, то есть картинки 
+                размерностью 28 на 28 пикселей, на которых изображены рукописные цифры. Фон 
+                должен быть белого цвета, а цифры – черного, потому что для распознавания рукописных цифр используется 
+                датасет mnist, в котором картинки представлены именно таким образом. Когда нейросеть получила изображения, 
+                начинается процесс свертки, на котором формируются первые карты признаков.</p>
+                <p style="text-indent: 50px;">После этого должен пройти процесс пулинга (уменьшения размерности карт признаков). 
+                Процессы свертки и пулинга повторяются два раза, чтобы усилить эффективность классификации цифр.</p>
+                <p style="text-indent: 50px;">Далее нам необходимо все получившиеся массивы преобразовать в одномерный 
+                массив и передать его для классификации в полносвязные слои.</p>
+                <p style="text-indent: 50px;">На основе данной информации, а также материала, полученного на 
+                лекционных занятиях, выстройте слои так, чтобы получилась правильная последовательность слоев 
+                сверточной нейронной сети. Для этого передвигайте блоки, расположенные ниже. Затем нажмите кнопку 
+                "Проверить", чтобы узнать ваш результат; он появится под кнопкой. При положительном результате 
+                можно переходить к следующему заданию.</p>
+            </div>
+            <div class="item" draggable="true" data-index="3422">Dense(10, activation="softmax")</div>
+            <div class="item" draggable="true" data-index="3568">Conv2D(64, (3,3), activation="relu"),</div>
+            <div class="item" draggable="true" data-index="1029">])</div>
+            <div class="item" draggable="true" data-index="4849">Dense(64, activation="relu"),</div>
+            <div class="item" draggable="true" data-index="4756">model = Sequential([</div>
+            <div class="item" draggable="true" data-index="5999">MaxPooling2D((2,2)),</div>
+            <div class="item" draggable="true" data-index="1235">Conv2D(32, (3,3), activation="relu", input_shape=(28,28,1)),</div>
+            <div class="item" draggable="true" data-index="1865">Flatten(),</div>
+            <div class="item" draggable="true" data-index="5542">MaxPooling2D((2,2)),</div>
+        </div>
+        <button id="checkBtn">Проверить</button>
+        <div id="result"></div>
+        <script src="/static/js/zadanie2.js"></script>
+    </main>
+
+    <footer>
+        &copy; 2026, Ермоленко И.С., ВГСПУ, МИФ<br>
+        Просим оценить эффективность веб-приложения 
+        в следующей <a href="https://forms.yandex.ru/u/69a55c0002848f80e010da56" class="styled-link">Яндекс-форме</a>.<br>
+        Ваше мнение важно для улучшения качества веб-приложения!
+    </footer>
+</body>
+
+</html>
