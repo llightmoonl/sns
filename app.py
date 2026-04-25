@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, session, render_template, request, redirect, url_for
+from flask import Flask, jsonify, session, render_template, make_response, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from keras.models import load_model
@@ -36,7 +36,15 @@ model = load_model("mnist_model.h5")
 @app.route("/")
 def index():
     logged_in = session.get("logged_in", False)
-    return render_template("index.html", logged_in=logged_in)
+    z1_passed = session.get("zadanie1_passed", False)
+    z2_passed = session.get("zadanie2_passed", False)
+    return render_template(
+        "index.html",
+        logged_in=logged_in,
+        z1_passed=z1_passed,
+        z2_passed=z2_passed,
+        logged_in_status=str(logged_in)
+    )
 
 @app.route("/registration", methods=["GET", "POST"])
 def registration():
@@ -61,15 +69,36 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             session["logged_in"] = True
-            return render_template("index.html")
+            session.pop("zadanie1_passed", None)
+            session.pop("zadanie2_passed", None)
+            return redirect(url_for("index"))
         else:
             return redirect(url_for("login"))
     return render_template("login.html")
 
 @app.route("/logout")
 def logout():
-    session.pop("logged_in", None)
-    return redirect(url_for("index"))
+    session.clear() 
+    logout_html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Выход</title>
+        <script>
+            localStorage.removeItem('accordionState');
+            setTimeout(function() {
+                window.location.href = '/';
+            }, 100); 
+        </script>
+    </head>
+    <body>
+        <p>Выполняется выход из системы...</p>
+    </body>
+    </html>
+    """
+    response = make_response(logout_html)
+    return response
 
 def login_required(f):
     @wraps(f)
@@ -199,6 +228,7 @@ def get_questions():
 @app.route("/zadanie1")
 @login_required
 def zadanie1():
+    session["zadanie1_passed"] = True
     return render_template("zadanie1.html")
 
 CORRECT_ORDERS = [
@@ -209,6 +239,7 @@ CORRECT_ORDERS = [
 @app.route("/zadanie2")
 @login_required
 def zadanie2():
+    session["zadanie2_passed"] = True
     return render_template("zadanie2.html")
 
 @app.route("/zadanie2/check_order", methods=["POST"])

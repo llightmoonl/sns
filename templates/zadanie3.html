@@ -24,85 +24,209 @@
         <form action="/zadanie3" method="post" enctype="multipart/form-data">
             <h1>Задание 3. Классификация рукописных цифр при помощи СНС</h1>
             <div class="description">
-                <p style="text-indent: 50px;"><b>Цель задания:</b> опробовать модель сверточной нейронной сети, построенной 
-                с использованием датасета mnist, для распознавания рукописных цифр.</p>
-                <p style="text-indent: 50px;">Для начала еще раз ознакомимся с архитектурой модели, которую мы выстроили в прошлом задании:</p>
-                <p style="text-indent: 50px; font-size: 20px;"><i>model = Sequential([</p>
-                <p style="text-indent: 100px; font-size: 20px; ">Conv2D(32, (3,3), activation="relu", input_shape=(28,28,1)),</p>
-                <p style="text-indent: 100px; font-size: 20px;">MaxPooling2D((2,2)),</p>
-                <p style="text-indent: 100px; font-size: 20px;">Conv2D(64, (3,3), activation="relu"),</p>
-                <p style="text-indent: 100px; font-size: 20px;">MaxPooling2D((2,2)),</p>
-                <p style="text-indent: 100px; font-size: 20px;">Flatten(),</p>
-                <p style="text-indent: 100px; font-size: 20px;">Dense(64, activation="relu"),</p>
-                <p style="text-indent: 100px; font-size: 20px;">Dense(10, activation="softmax")</p>
-                <p style="text-indent: 50px; font-size: 20px;">])</p></i>
-                <p style="text-indent: 50px;">Вспомним, что из себя представляет каждый слой СНС. Для начала рассмотрим один 
-                из важных слоев – Conv2D. Он отвечает за процесс свертки. Принцип работы – скольжение по входной карте признаков 
-                с целью умножения значений матрицы на соответствующие веса, формирующиеся в ядре свертки. Получившиеся значения 
-                откладываются в соответствующие места на выходной карте признаков. На рисунке с визуализацией данного процесса 
-                можно увидеть, как фиолетовая матрица умножается на матрицу ядра свертки и получившееся значение (фиолетовый 
-                ноль) откладывается в выходной карте. Данный процесс повторяется со сдвигом на один шаг, пока все матрицы 
-                не умножатся на ядро свертки:</p>
-                <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
-                    <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/conv2d.gif')">
-                        <img src="/static/images/conv2d.gif" alt="Операция свертки - Conv2D" style="display: block; margin-bottom: 10px;">
-                        <span><i>Операция свертки - Conv2D</i></span>
+                <p style="text-indent: 50px;">
+                    <b>Цель задания:</b> опробовать модель сверточной нейронной сети, построенной 
+                    с использованием датасета mnist, для распознавания рукописных цифр.
+                </p>
+                <p style="text-indent: 50px;">
+                    Для начала еще раз ознакомимся с архитектурой модели, 
+                    которую мы выстроили в прошлом задании:</p>
+                <p style="text-indent: 50px; font-size: 20px;">
+                    <i>model = Sequential([
+                </p>
+                <p style="text-indent: 100px; font-size: 20px; ">
+                    Conv2D(32, (3,3), activation="relu", input_shape=(28,28,1)),
+                </p>
+                <p style="text-indent: 100px; font-size: 20px;">
+                    MaxPooling2D((2,2)),
+                </p>
+                <p style="text-indent: 100px; font-size: 20px;">
+                    Conv2D(64, (3,3), activation="relu"),
+                </p>
+                <p style="text-indent: 100px; font-size: 20px;">
+                    MaxPooling2D((2,2)),
+                </p>
+                <p style="text-indent: 100px; font-size: 20px;">
+                    Flatten(),
+                </p>
+                <p style="text-indent: 100px; font-size: 20px;">
+                    Dense(64, activation="relu"),
+                </p>
+                <p style="text-indent: 100px; font-size: 20px;">
+                    Dense(10, activation="softmax")
+                </p>
+                <p style="text-indent: 50px; font-size: 20px;">
+                    ])
+                </p></i>
+                <p style="text-indent: 50px;">
+                    Вспомним, что из себя представляет каждый слой СНС. Для ознакомления с материалом последовательно 
+                    раскрывайте необходимые блоки, в которых содержится текст и соответствующая к нему визуализация.
+                    После ознакомления с первым блоком переходите ко второму, затем к третьему и так далее.
+                </p>
+                <div class="accordion-block">
+                    <div class="accordion-header">
+                        <h3>Слой Conv2D: Операция свертки</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="text-indent: 50px;">
+                            Для начала рассмотрим один из важных слоев СНС – Conv2D. Он отвечает за процесс свертки.
+                            Принцип работы – скольжение по входной карте признаков с целью умножения значений матрицы 
+                            на соответствующие веса, формирующиеся в ядре свертки. Получившиеся значения откладываются 
+                            в соответствующие места на выходной карте признаков. На визуализации данного процесса вы 
+                            можете увидеть, как красная матрица умножается на матрицу ядра свертки и получившееся значение 
+                            (число "-3" красного цвета) откладывается в выходной карте. Данный процесс повторяется со 
+                            сдвигом на один шаг, пока все матрицы не умножатся на ядро свертки:
+                        </p>
+                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
+                            <div class="image-container">
+                                <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/conv2d.gif')">
+                                    <img src="/static/images/conv2d.gif" alt="Операция свертки - Conv2D" style="display: block; margin-bottom: 10px; max-width: 300px;">
+                                    <span><i>Операция свертки - Conv2D</i></span>
+                                </div>
+                                <button class="fullscreen-btn" type="button" data-img-src="/static/images/conv2d.gif">Развернуть на весь экран</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <p style="text-indent: 50px;">Далее рассмотрим слой MaxPooling2D. Он отвечает за процесс пулинга. Принцип работы – 
-                уменьшение карты признаков, которая получается в процессе свертки. Уменьшение происходит за счет выбора максимального 
-                значения в каждой матрице и откладывание его на соответствующем месте в выходной карте признаков. На рисунке, 
-                визуализирующем данный процесс, можно заметить, что из зеленой матрицы с помощью процесса пулинга была выбрана 
-                максимальная цифра 2. Градация цвета от светлого к темному помогает нам увидеть цифры матрицы в порядке возрастания. 
-                Точно также происходит в оранжевой, фиолетовой и розовой матрицах:</p>
-                <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
-                    <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/maxpooling2d.gif')">
-                        <img src="/static/images/maxpooling2d.gif" alt="Операция пулинга - MaxPooling2D" style="display: block; margin-bottom: 10px;">
-                        <span><i>Операция пулинга - MaxPooling2D</i></span>
+                <div class="accordion-block">
+                    <div class="accordion-header">
+                        <h3>Слой MaxPooling2D: Операция пулинга</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="text-indent: 50px;">
+                            Далее рассмотрим слой MaxPooling2D. Он отвечает за процесс пулинга. Принцип работы – уменьшение 
+                            карты признаков, которая получается в процессе свертки. Уменьшение происходит за счет выбора 
+                            максимального значения в каждой матрице и откладывание его на соответствующем месте в выходной 
+                            карте признаков. На визуализации данного процесса можно заметить, что из синей матрицы с помощью 
+                            процесса пулинга была выбрана максимальное число 16. Градация цвета от светлого к темному помогает 
+                            нам увидеть цифры матрицы в порядке возрастания. Точно также происходит в зеленой, 
+                            фиолетовой и оранжевой матрицах:
+                        </p>
+                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
+                            <div class="image-container">
+                                <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/maxpooling2d.gif')">
+                                    <img src="/static/images/maxpooling2d.gif" alt="Операция пулинга - MaxPooling2D" style="display: block; margin-bottom: 10px; max-width: 300px;">
+                                    <span><i>Операция пулинга - MaxPooling2D</i></span>
+                                </div>
+                                <button class="fullscreen-btn" type="button" data-img-src="/static/images/maxpooling2d.gif">Развернуть на весь экран</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <p style="text-indent: 50px;">Слой Flatten отвечает за преобразование многомерных данных в одномерные. 
-                К моменту работы данного слоя у нас сформировано 64 массива, состоящих из 25 элементов. Слой Flatten 
-                преобразует данные массивы в одномерный массив, состоящий из 64*25 = 1600 элементов.</p>
-                <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
-                    <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/flatten.gif')">
-                        <img src="/static/images/flatten.gif" alt="Операция выравнивания - Flatten" style="display: block; margin-bottom: 10px;">
-                        <span><i>Операция выравнивания - Flatten</i></span>
+                <div class="accordion-block">
+                    <div class="accordion-header">
+                        <h3>Слой Flatten: Операция выравнивания</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="text-indent: 50px;">
+                            Слой Flatten отвечает за преобразование многомерных данных в одномерные. К моменту работы 
+                            данного слоя у нас сформировано 64 массива, состоящих из 25 элементов. Слой Flatten 
+                            преобразует данные массивы в одномерный массив, состоящий из 64*25 = 1600 элементов.
+                        </p>
+                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
+                            <div class="image-container">
+                                <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/flatten.gif')">
+                                    <img src="/static/images/flatten.gif" alt="Операция выравнивания - Flatten" style="display: block; margin-bottom: 10px; max-width: 300px;">
+                                    <span><i>Операция выравнивания - Flatten</i></span>
+                                </div>
+                                <button class="fullscreen-btn" type="button" data-img-src="/static/images/flatten.gif">Развернуть на весь экран</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <p style="text-indent: 50px;">Одномерный массив попадет в полносвязный слой Dense. Данный слой 
-                необходим для первичной классификации ключевых признаков, которые передаются во второй полносвязный слой 
-                Dense. И именно в нем будет происходить окончательная классификации цифры, изображенной на входной картинке.</p>
-                <p style="text-indent: 50px;">Теперь нам нужно вспомнить, как же работают функции активации в слоях 
-                сверточной нейронной сети и что они представляют из себя.</p>
-                <p style="text-indent: 50px;">Функции активации – это определенные математические функции, которые 
-                принимают на вход значение и преобразуют его в выходное. Они применяются к каждому элементу данных, 
-                чтобы ввести в модель нелинейность. В нашей модели сверточной нейронной сети используются такие функции активации, 
-                как ReLU и Softmax.</p>
-                <p style="text-indent: 50px;">Функция активации ReLU пропускает положительные входные значения без изменений, а 
-                отрицательные значения преобразует в ноль. Данная функция нужна, чтобы избежать отрицательных значений. 
-                График функции ReLU можно увидеть ниже:</p>
-                <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
-                    <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/relu.gif')">
-                        <img src="/static/images/relu.gif" alt="Функция активации ReLU" style="display: block; margin-bottom: 10px;">
-                        <span><i>Функция активации ReLU</i></span>
+                <div class="accordion-block">
+                    <div class="accordion-header">
+                        <h3>Слой Dense: Полносвязный слой</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="text-indent: 50px;">
+                            Одномерный массив попадет в полносвязный слой Dense. Данный слой необходим для первичной 
+                            классификации ключевых признаков, которые передаются во второй полносвязный слой Dense. 
+                            И именно в нем будет происходить окончательная классификации цифры, изображенной на входной картинке.
+                        </p>
+                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
+                            <div class="image-container">
+                                <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/dense.gif')">
+                                    <img src="/static/images/dense.gif" alt="Полносвязный слой Dense" style="display: block; margin-bottom: 10px; max-width: 300px;">
+                                    <span><i>Полносвязный слой Dense</i></span>
+                                </div>
+                                <button class="fullscreen-btn" type="button" data-img-src="/static/images/dense.gif">Развернуть на весь экран</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <p style="text-indent: 50px;">Функция активации Softmax преобразует выходные значения нейронной сети в вероятности. 
-                Данная функция обычно используется в последнем полносвязном слое для окончательной классификации, например, 
-                рукописных цифр, животных, одежды или других объектов. График функции Softmax:</p>
-                <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
-                    <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/softmax.gif')">
-                        <img src="/static/images/softmax.gif" alt="Функция активации Softmax" style="display: block; margin-bottom: 10px;">
-                        <span><i>Функция активации Softmax</i></span>
+                <p style="text-indent: 50px;">
+                    Теперь нам нужно вспомнить, как же работают функции активации в слоях 
+                    сверточной нейронной сети и что они представляют из себя.
+                </p>
+                <p style="text-indent: 50px;">
+                    Функции активации – это определенные математические функции, которые 
+                    принимают на вход значение и преобразуют его в выходное. Они применяются к каждому элементу данных, 
+                    чтобы ввести в модель нелинейность. В нашей модели сверточной нейронной сети используются такие функции 
+                    активации, как ReLU и Softmax.
+                </p>
+                <div class="accordion-block">
+                    <div class="accordion-header">
+                        <h3>Функция активации ReLU</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="text-indent: 50px;">
+                            Функция активации ReLU пропускает положительные входные значения без изменений, а отрицательные 
+                            значения преобразует в ноль. Данная функция нужна, чтобы избежать отрицательных значений. График 
+                            функции ReLU можно увидеть ниже:
+                        </p>
+                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
+                            <div class="image-container">
+                                <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/relu.gif')">
+                                    <img src="/static/images/relu.gif" alt="Функция активации ReLU" style="display: block; margin-bottom: 10px; max-width: 300px;">
+                                    <span><i>Функция активации ReLU</i></span>
+                                </div>
+                                <button class="fullscreen-btn" type="button" data-img-src="/static/images/relu.gif">Развернуть на весь экран</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-block">
+                    <div class="accordion-header">
+                        <h3>Функция активации Softmax</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="text-indent: 50px;">
+                            Функция активации Softmax преобразует выходные значения нейронной сети в вероятности. Данная 
+                            функция обычно используется в последнем полносвязном слое для окончательной классификации, например, 
+                            рукописных цифр, животных, одежды или других объектов. График функции Softmax:
+                        </p>
+                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
+                            <div class="image-container">
+                                <div class="zoomable" style="text-align: center;" onclick="openFullscreenImage('/static/images/softmax.gif')">
+                                    <img src="/static/images/softmax.gif" alt="Функция активации Softmax" style="display: block; margin-bottom: 10px; max-width: 300px;">
+                                    <span><i>Функция активации Softmax</i></span>
+                                </div>
+                                <button class="fullscreen-btn" type="button" data-img-src="/static/images/softmax.gif">Развернуть на весь экран</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <script src="/static/js/zoom.js"></script>
-                <p style="text-indent: 50px;">Теперь попробуйте загрузить изображение для классификации. Оно должно быть 
-                изображено черным цветом на белом фоне, размерность – 28 на 28 пикселей, формат – ".png":</p>
+                <p style="text-indent: 50px;">
+                    Теперь загрузите изображение для классификации. Оно должно быть 
+                    изображено черным цветом на белом фоне, размерность – 28 на 28 пикселей, формат – ".png".
+                </p>
                 <input type="file" name="image" accept="image/*" required>
-                <p style="text-indent: 50px;">После классификации под кнопкой появится распознанная цифра, а также 
-                визуализация процесса работы модели СНС.</p>
+                <p style="text-indent: 50px;">
+                    После классификации под кнопкой появится распознанная цифра, а также 
+                    визуализация процесса работы модели СНС.
+                </p>
+                <p style="text-indent: 50px;">
+                    Если кнопка не нажимается, значит вы не прочитали весь материал, 
+                    представленный в данном задании.
+                </p>
                 <button type="submit">Классифицировать</button>
                 {% if digit is not none %}
                     <p style="text-align:center; margin-top:20px; font-size:24px; font-weight:bold; color: green;">Распознанная цифра: {{ digit }}</p>
@@ -122,6 +246,9 @@
         в следующей <a href="https://forms.yandex.ru/u/69a55c0002848f80e010da56" class="styled-link">Яндекс-форме</a>.<br>
         Ваше мнение важно для улучшения качества веб-приложения!
     </footer>
+
+    <script src="/static/js/zoom2.js"></script>
+
 </body>
 
 </html>

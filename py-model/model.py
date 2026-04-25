@@ -27,7 +27,9 @@ model = Sequential([
     Dense(10, activation="softmax")
 ])
 
-model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+model.compile(optimizer="adam",
+              loss="categorical_crossentropy",
+              metrics=["accuracy"])
 
 batch_size = 64
 epochs = 5
