@@ -11,7 +11,6 @@ function openFullscreenImage(imgSrc) {
     overlay.style.justifyContent = "center";
     overlay.style.alignItems = "center";
     overlay.style.zIndex = "1001";
-    overlay.style.cursor = "zoom-out";
     const container = document.createElement("div");
     container.style.position = "relative";
     container.style.width = "100%";
@@ -23,17 +22,24 @@ function openFullscreenImage(imgSrc) {
     closeBtn.style.position = "absolute";
     closeBtn.style.top = "20px";
     closeBtn.style.right = "20px";
-    closeBtn.style.color = "#fff";
+    closeBtn.style.color = "#000";
     closeBtn.style.fontSize = "40px";
     closeBtn.style.cursor = "pointer";
     closeBtn.style.zIndex = "1002";
+    closeBtn.style.backgroundColor = "white";
+    closeBtn.style.borderRadius = "50%";
+    closeBtn.style.width = "40px";
+    closeBtn.style.height = "40px";
+    closeBtn.style.lineHeight = "40px";
+    closeBtn.style.textAlign = "center";
+    closeBtn.style.fontWeight = "bold";
+    closeBtn.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
     const img = document.createElement("img");
     img.src = imgSrc;
     img.alt = "Увеличенное изображение";
     img.style.width = "100%";
     img.style.height = "100%";
     img.style.objectFit = "contain";
-    img.style.border = "none";
     closeBtn.onclick = function() {
         document.body.removeChild(overlay);
         const originalImg = document.querySelector(`img[src="${imgSrc}"]`);
@@ -48,6 +54,14 @@ function openFullscreenImage(imgSrc) {
             if (originalImg) {
                 originalImg.classList.remove("zoomed");
             }
+        }
+    };
+    img.onclick = function(event) {
+        event.stopPropagation();
+        document.body.removeChild(overlay);
+        const originalImg = document.querySelector(`img[src="${imgSrc}"]`);
+        if (originalImg) {
+            originalImg.classList.remove("zoomed");
         }
     };
     container.appendChild(img);
