@@ -19,6 +19,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ${{ secrets.PROJECT_FOLDER }}
+            ls -la
             git pull origin main
             docker compose -f docker-compose.prod.yaml up -d --build
             docker compose -f docker-compose.prod.yaml ps
