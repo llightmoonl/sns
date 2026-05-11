@@ -210,7 +210,7 @@ button:hover {
     background-color: #0066cc;
 }
 
-.repeat-button {
+.repeat-test-btn {
     width: 100%;
     padding: 12px 0;
     margin-top: 18px;
@@ -228,7 +228,7 @@ button:hover {
     text-align: center;
 }
 
-.repeat-button:hover {
+.repeat-test-btn:hover {
     background-color: #0066cc;
 }
 
