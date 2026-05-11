@@ -210,6 +210,28 @@ button:hover {
     background-color: #0066cc;
 }
 
+.repeat-button {
+    width: 100%;
+    padding: 12px 0;
+    margin-top: 18px;
+    background-color: #2c3e50;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px #0066cc;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.repeat-button:hover {
+    background-color: #0066cc;
+}
+
 .zoomable {
     transition: transform 0.2s ease-in-out;
     cursor: pointer;

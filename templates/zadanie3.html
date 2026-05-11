@@ -229,16 +229,14 @@
                 </p>
                 <button type="submit">Классифицировать</button>
                 {% if digit is not none %}
-                    <p style="text-align: center; margin-top: 20px; font-size: 24px; font-weight: bold; color: green;">Распознанная цифра: {{ digit }}</p>
-                    <div style="text-align: center; margin-top: 10px;" class="zoomable" 
+                    <p style="text-align:center; margin-top:20px; font-size:24px; font-weight:bold; color: green;">Распознанная цифра: {{ digit }}</p>
+                    <div style="text-align:center; margin-top:10px;" class="zoomable" 
                         onclick="openFullscreenImage(`{{ url_for('static', filename='digits/Цифра ' ~ digit ~ '.png') }}`)">
                         <img src="{{ url_for('static', filename='digits/Цифра ' ~ digit ~ '.png') }}" alt="Цифра {{ digit }}" style="cursor: zoom-in;" />
                         <span><i>Работа сверточной нейронной сети</i></span>
                     </div>
-                    <p style="text-align: center; margin-top: 20px;">
-                        <a href="/" style="display: inline-block; padding: 12px 25px; background: #2c3e50; color: white; text-decoration: none; font-size: 18px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px #0066cc; transition: background-color 0.3s ease, transform 0.2s ease;">
-                            Повторно пройти тест
-                        </a>
+                    <p style="text-align:center; margin-top:20px;">
+                        <a href="/zadanie3" class="repeat-test-btn">Повторно пройти тест</a>
                     </p>
                 {% endif %}
             </div>
