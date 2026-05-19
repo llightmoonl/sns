@@ -343,7 +343,7 @@ def zadanie3():
         else:
             file = request.files["image"]
             filename = file.filename
-            save_path = os.path.join("static/images", filename)
+            save_path = os.path.join("uploads", filename)
             file.save(save_path)
             img = Image.open(save_path).convert("L").resize((28, 28))
             img = np.array(img) / 255.0
