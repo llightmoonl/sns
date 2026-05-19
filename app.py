@@ -25,8 +25,19 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(15), unique=True, index=True, nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    username = db.Column(db.String(50), unique=True, index=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(20), default="student", nullable=False)
+
+class TestResult(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user = db.relationship("User", backref=db.backref("test_results", lazy=True))
+    errors_count = db.Column(db.Integer, nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 with app.app_context():
     db.create_all()
@@ -46,16 +57,44 @@ def index():
         logged_in_status=str(logged_in)
     )
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("logged_in"):
+            return redirect(url_for("login"))
+        if session.get("username") != "admin":
+            return "Доступ запрещен: только для администратора", 403
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route("/admin")
+@admin_required
+def admin_panel():
+    users = User.query.filter(User.username != "admin").all()
+    return render_template("admin.html", users=users)
+
+@app.route("/admin/set_teacher", methods=["POST"])
+@admin_required
+def set_teacher():
+    username = request.form.get("username")
+    user = User.query.filter_by(username=username).first()
+    if user:
+        user.role = "teacher"
+        db.session.commit()
+    return redirect(url_for("admin_panel"))
+
 @app.route("/registration", methods=["GET", "POST"])
 def registration():
     if request.method == "POST":
+        first_name = request.form["first_name"]
+        last_name = request.form["last_name"]
         username = request.form["username"]
         password = request.form["password"]
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             return redirect(url_for("registration"))
         hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
-        new_user = User(username=username, password=hashed_password)
+        new_user = User(first_name=first_name, last_name=last_name, username=username, password=hashed_password, role="student")
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for("index"))
@@ -69,7 +108,10 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             session["logged_in"] = True
-            session.pop("zadanie1_passed", None)
+            session["username"] = user.username
+            session["first_name"] = user.first_name
+            session["last_name"] = user.last_name
+            session.pop("zadanie1_passed", None) 
             session.pop("zadanie2_passed", None)
             return redirect(url_for("index"))
         else:
@@ -236,6 +278,40 @@ CORRECT_ORDERS = [
     [4756, 1235, 5542, 3568, 5999, 1865, 4849, 3422, 1029]
 ]
 
+@app.route("/api/save_result", methods=["POST"])
+@login_required
+def save_result():
+    data = request.json
+    errors_count = data.get("errorsCount")
+    score = data.get("score")
+    if errors_count is None or score is None:
+        return jsonify({"status": "error", "message": "Нет данных о результате"}), 400
+    user_id = session.get("user_id")
+    user = User.query.filter_by(username=session.get("username")).first()
+    if not user:
+        return jsonify({"status": "error", "message": "Пользователь не найден"}), 404
+    result = TestResult(user_id=user.id, errors_count=errors_count, score=score)
+    db.session.add(result)
+    db.session.commit()
+    return jsonify({"status": "ok", "message": "Результат сохранен"})
+
+def teacher_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("logged_in"):
+            return redirect(url_for("login"))
+        user = User.query.filter_by(username=session.get("username")).first()
+        if not user or user.role != "teacher":
+            return "Доступ запрещен: только для преподавателей", 403
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route("/results")
+@teacher_required
+def results():
+    all_results = TestResult.query.order_by(TestResult.timestamp.desc()).all()
+    return render_template("results.html", results=all_results)
+
 @app.route("/zadanie2")
 @login_required
 def zadanie2():
@@ -281,6 +357,14 @@ def zadanie3():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("page404.html"), 404
+
+with app.app_context():
+    admin = User.query.filter_by(username="admin").first()
+    if not admin:
+        hashed_pass = generate_password_hash("Igor19", method="pbkdf2:sha256")
+        admin_user = User(username="admin", password=hashed_pass, role="teacher", first_name="Админ", last_name="Админович")
+        db.session.add(admin_user)
+        db.session.commit()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)

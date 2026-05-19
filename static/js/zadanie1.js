@@ -80,4 +80,10 @@ function displayResult() {
     }
     result.innerHTML = message;
     form.style.display = "none";
+    fetch("/api/save_result", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ errorsCount: errorsCount, score: score })
+    })
+    .catch(err => console.error("Ошибка сохранения результата:", err));
 }

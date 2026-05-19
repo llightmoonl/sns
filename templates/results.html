@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Результаты тестов</title>
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/css/results.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/static/images/logo.png" alt="Логотип">Сверточные нейросети
+        </div>
+        <div class="registration">
+            <a href="logout">Выход</a>
+            <a href="/">К заданиям</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Результаты прохождения теста</h1>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <tr style="background-color: #f2f2f2; text-align: center;">
+                    <th style="padding: 12px; border: 1px solid #ddd;">Имя</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Фамилия</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Ошибки</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Баллы</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Дата</th>
+                </tr>
+                {% for result in results %}
+                    <tr style="text-align: center;">
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ result.user.first_name }}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ result.user.last_name }}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ result.errors_count }}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ result.score }}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ result.timestamp }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026, Ермоленко И.С., ВГСПУ, МИФ<br>
+        Просим оценить веб-приложение в соответствующей вашей группе Яндекс-форме: 
+        <a href="https://forms.yandex.ru/u/69a55c0002848f80e010da56" class="styled-link">МИФ-МИБ-5</a>, 
+        <a href="https://forms.yandex.ru/u/6a0c1fb9d046882160038b87" class="styled-link">МИФ-ПИБ-4</a>.<br>
+        Ваше мнение важно для улучшения качества веб-приложения!
+    </footer>
+
+</body>
+
+</html>

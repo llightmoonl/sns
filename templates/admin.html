@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Панель администратора</title>
+</head>
+<body>
+    <h1>Управление ролями</h1>
+    <p>Вы вошли как: {{ session.username }}</p>    
+    <h2>Список пользователей</h2>
+    <ul>
+        {% for user in users %}
+            <li>
+                {{ user.last_name }} {{ user.first_name }} 
+                (Роль: {{ user.role }})
+                {% if user.role != "teacher" %}
+                    <form method="POST" action="{{ url_for('set_teacher') }}" style="display:inline;">
+                        <input type="hidden" name="username" value="{{ user.username }}">
+                        <button type="submit">Назначить учителем</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>    
+    <br>
+    <a href="/">Вернуться к заданиям</a>
+</body>
+</html>
